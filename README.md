@@ -43,7 +43,7 @@ python3 protocol_query.py \
   --jwt <client user jwt>
 ```
 
-+ Run task
++ Run task.
 
 ```shell
 python3 user_run_task.py \
