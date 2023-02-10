@@ -27,7 +27,7 @@ if __name__ == "__main__":
     logging.info(f"Client user generated. \n\tjwt: {jwt}\n\t user id: {user_id}")
 
     # Load the configuration to the server
-    f = open("../example/config.json")
+    f = open("../example/client/config.json")
     config = json.loads(f.read())
     providers_config = config["providers"]
     f.close()
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     logging.info(f"Configuration loaded to server.")
 
     # Load the query to the server
-    f = open("../example/query.sql")
+    f = open("../example/client/query.sql")
     cl.create_entry("query", f.readline())
     f.close()
     logging.info(f"Query loaded to server.")

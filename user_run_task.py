@@ -21,7 +21,10 @@ if __name__ == "__main__":
         ),
     ]
     cl_c = CoLink(addr, jwt_c)
+    cl_p = CoLink(addr, jwt_p)
     task_id_c = cl_c.run_task("query", b"", participants, True)
     logging.info(f"Task {task_id,} has been created for client.")
     task_id_p = cl_p.run_task("query", b"", participants, True)
     logging.info(f"Task {task_id,} has been created for provider.")
+
+    print(cl_c.read_or_wait("results"))

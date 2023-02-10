@@ -120,7 +120,7 @@ def run_client(cl: CoLink, param: bytes, participants: List[CL.Participant]):
         result = byte_to_str(cl.get_variable("output", participant))
         if result != "Table not found.":
             results.append(result)
-    cl.create_entry(f"result", merge_results(results, query))
+    cl.create_entry("results", merge_results(results, query))
 
 
 @pop.handle("query:provider")
@@ -133,7 +133,7 @@ def run_provider(cl: CoLink, param: bytes, participants: List[CL.Participant]):
     content = cl.read_keys(":".join([f'{user_id}::database', query.concerned_table, "data"]), False)
 
     if not content:
-        cl.set_variable("output", "Table not found.", participants[0])
+        cl.set_variable("result", "Table not found.", participants[0])
         return
 
     schema_type = cl.read_keys(":".join([f'{user_id}::database', concerned_table, "schema", "type"]), False)
@@ -152,9 +152,10 @@ def run_provider(cl: CoLink, param: bytes, participants: List[CL.Participant]):
             record = json.loads(byte_to_str(line))
             if query.pred.check(record):
                 result += record[query.concerned_column][1]
-    cl.set_variable("output", json.dumps(result), participants[0])
+    cl.set_variable("result", json.dumps(result), participants[0])
 
 
 if __name__ == "__main__":
     logging.basicConfig(filename="protocol_greeting.log", filemode="a", level=logging.INFO)
     pop.run()
+
