@@ -85,6 +85,6 @@ def run_provider(cl: CoLink, param: bytes, participants: List[CL.Participant]):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(filename="protocol_greeting.log", filemode="a", level=logging.INFO)
+    logging.basicConfig(filename="protocol_query.log", filemode="a", level=logging.INFO)
     pop.run()
 
