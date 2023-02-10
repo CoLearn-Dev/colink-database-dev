@@ -1,0 +1,11 @@
+{
+    "providers": {
+        "broker_a": {
+            "type": "remote",
+            "tables": [
+                "t_deposit",
+                "t_try"
+            ]
+        }
+    }
+}
