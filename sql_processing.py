@@ -49,7 +49,7 @@ class Query:
             if token == "WHERE":
                 from_r, where_l = i, i+1
         tokens_select = tokens[select_l:select_r]
-        if ''.join(tokens_select).find('('):
+        if ~''.join(tokens_select).find('('):
             self.type = "Q_AGGREGATE_SUM"
             self.concerned_column = tokens_select[0].split('(')[1].replace(')', '')
         else:
