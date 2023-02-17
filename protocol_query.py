@@ -15,8 +15,6 @@ pop = ProtocolOperator(__name__)
 @pop.handle("query:client")
 def run_client(cl: CoLink, param: bytes, participants: List[CL.Participant]):
     def merge_results(results, query): # Note that both the input and the output results are strings
-        if not results:
-            return ""
         if query.is_aggregate():
             total = 0
             for result in results:
@@ -31,9 +29,9 @@ def run_client(cl: CoLink, param: bytes, participants: List[CL.Participant]):
     logging.info(f"query:client protocol operator! {cl.jwt}")
 
     # Initiate the query
-    sql = byte_to_str(cl.read_entry("query"))
+    sql = byte_to_str(cl.read_entry(byte_to_str(param)))
     query = Query(sql)
-    cl.set_variable("query", query.dumps(), participants[1:])
+    cl.set_variable("query", bytes(query.dumps(), 'utf-8'), participants[1:])
     
     # Receive query results
     results = []
@@ -41,7 +39,7 @@ def run_client(cl: CoLink, param: bytes, participants: List[CL.Participant]):
         result = byte_to_str(cl.get_variable("result", participant))
         if result != "Table not found.":
             results.append(result)
-    cl.create_entry("results", merge_results(results, query))
+    cl.create_entry("output", merge_results(results, query))
 
 
 @pop.handle("query:provider")
@@ -50,19 +48,17 @@ def run_provider(cl: CoLink, param: bytes, participants: List[CL.Participant]):
         schema_name, schema_type = schema
         if query.type == "Q_RETRIEVE":
             result = []
-            for line in table:
-                line = json.loads(byte_to_str(line))
+            for row in table:
                 record = {}
-                for i, value in enumerate(line):
+                for i, value in enumerate(row):
                     record[schema_name[i]] = value
                 if query.pred.check(record):
                     result.append([record[col] for col in query.concerned_column])
         elif query.type == "Q_AGGREGATE_SUM":
             result = 0
-            for line in table:
-                line = json.loads(byte_to_str(line))
+            for row in table:
                 record = {}
-                for i, value in enumerate(line):
+                for i, value in enumerate(row):
                     record[schema_name[i]] = value
                 if query.pred.check(record):
                     result += record[query.concerned_column]
@@ -71,20 +67,18 @@ def run_provider(cl: CoLink, param: bytes, participants: List[CL.Participant]):
     logging.info(f"query:client protocol operator! {cl.jwt}")
 
     query_str = byte_to_str(cl.get_variable("query", participants[0]))
-    query = Query().from_json(json.loads(query_str))
-    table = cl.read_keys(":".join(['database', query.concerned_table, "data"]), False)
-    if not table:
-        cl.set_variable("result", "Table not found.", participants[0])
+    query = Query.from_json(json.loads(query_str))
+    table_keys = cl.read_keys(":".join([f"{cl.get_user_id()}:", "database", query.concerned_table, "data"]), False)
+    if not table_keys:
+        cl.set_variable("result", bytes("Table not found.", 'utf-8'), [participants[0]])
         return
-    schema_type = cl.read_keys(":".join(['database', concerned_table, "schema", "type"]), False)
-    schema_name = cl.read_keys(":".join(['database', concerned_table, "schema", "name"]), False)
+    table = []
+    for key in table_keys:
+        table.append(json.loads(byte_to_str(cl.read_entry(key.key_path))))
+    schema_type = cl.read_entry(":".join(["database", query.concerned_table, "schema", "type"]))
+    schema_name = cl.read_entry(":".join(["database", query.concerned_table, "schema", "name"]))
     schema_type = json.loads(byte_to_str(schema_type))
     schema_name = json.loads(byte_to_str(schema_name))
 
-    cl.set_variable("result", run_query(table, (schema_name, schema_type), query), participants[0])
-
-
-if __name__ == "__main__":
-    logging.basicConfig(filename="protocol_query.log", filemode="a", level=logging.INFO)
-    pop.run()
-
+    result = run_query(table, (schema_name, schema_type), query)
+    cl.set_variable("result", bytes(result, 'utf-8'), [participants[0]])
