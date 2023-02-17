@@ -132,6 +132,7 @@ if __name__ == "__main__":
             cl_p.create_entry(":".join([key_name, str(i)]), json.dumps(record))
 
     # Start protocol operator and run task
+    logging.info("Start protocol operator and run task!")
     pop.run_attach(cl_c)
     pop.run_attach(cl_p)
     participants = [
