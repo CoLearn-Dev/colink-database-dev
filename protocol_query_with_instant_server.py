@@ -131,8 +131,6 @@ if __name__ == "__main__":
         for i, record in enumerate(records):
             cl_p.create_entry(":".join([key_name, str(i)]), json.dumps(record))
 
-    table = cl_p.read_keys(":".join([f"{cl_p.get_user_id()}:", "database", "t_deposit", "data"]), False)
-
     # Start protocol operator and run task
     pop.run_attach(cl_c)
     pop.run_attach(cl_p)
