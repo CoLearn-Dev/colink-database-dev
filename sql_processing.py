@@ -2,12 +2,12 @@ import json
 import sqlparse
 
 class Predicate:
-    def __init__(self, tokens_seg=None):
-        if tokens_seg == None:
+    def __init__(self, tokens=None):
+        if tokens == None:
             return
-        self.concerned_column = tokens_seg[0]
-        self.value = tokens_seg.replace('\"', '')
-        self.type = tokens_seg[1]
+        self.concerned_column = tokens[0]
+        self.value = tokens[2].replace('\"', '')
+        self.type = tokens[1]
 
     def check(self, record):
         if self.type == '<':
@@ -25,10 +25,13 @@ class Predicate:
         }
         return json.dumps(dic)
 
-    def from_json(self, pred_json):
-        self.concerned_column = pred_json["concerned_column"]
-        self.value = pred_json["value"]
-        self.type = pred_json["type"]
+    @staticmethod
+    def from_json(pred_json):
+        pred = Predicate()
+        pred.concerned_column = pred_json["concerned_column"]
+        pred.value = pred_json["value"]
+        pred.type = pred_json["type"]
+        return pred
 
 
 class Query:
@@ -36,7 +39,7 @@ class Query:
         if sql == None:
             return
         # Parse SQL query, supported query types SUM, RETRIEVE
-        tokens = sql.strip().split(' ')
+        tokens = sql.replace('\n', ' ').strip().split(' ')
         tokens = [token for token in tokens if token != '']
         for i, token in enumerate(tokens):
             if token == "SELECT":
@@ -45,17 +48,16 @@ class Query:
                 select_r, from_l = i, i+1
             if token == "WHERE":
                 from_r, where_l = i, i+1
-        tokens_seg = tokens[select_l:select_r]
-        if '(' in tokens_seg:
-            self.type == "Q_AGGREGATE_SUM"
-            self.concerned_column = tokens_seg.split('(')[1].replace(')', '')
+        tokens_select = tokens[select_l:select_r]
+        if ''.join(tokens_select).find('('):
+            self.type = "Q_AGGREGATE_SUM"
+            self.concerned_column = tokens_select[0].split('(')[1].replace(')', '')
         else:
-            self.type == "Q_RETRIEVE"
+            self.type = "Q_RETRIEVE"
             self.concerned_column = []
-            for token in tokens_seg:
+            for token in tokens_select:
                 self.concerned_column.append(token.replace(',', ''))
-        tokens_seg = tokens[from_l:from_r]
-        self.concerned_table = tokens_seg[0]
+        self.concerned_table = tokens[from_l:from_r][0]
         self.pred = Predicate(tokens[where_l:])
 
     def is_retrieve(self):
@@ -73,12 +75,20 @@ class Query:
         }
         return json.dumps(dic)
 
-    def from_json(self, query_json):
-        self.type = query_json["type"]
-        self.concerned_column = query_json["concerned_column"]
-        self.concerned_table = query_json["concerned_table"]
-        self.pred = Predicate().from_json(query_json["predicate"])
+    @staticmethod
+    def from_json(query_json):
+        query = Query()
+        query.type = query_json["type"]
+        query.concerned_column = query_json["concerned_column"]
+        query.concerned_table = query_json["concerned_table"]
+        query.pred = Predicate.from_json(json.loads(query_json["predicate"]))
+        return query
 
 
 if __name__ == "__main__":
-    pass
+    # test
+    sql = "SELECT SUM(deposit) FROM t_deposit WHERE user_name = \"Robert\""
+    query_str = Query(sql).dumps()
+    print(query_str)
+    query = Query.from_json(json.loads(query_str))
+    print(query.dumps())

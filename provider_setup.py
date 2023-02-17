@@ -10,7 +10,7 @@ from colink import (
 )
 
 if __name__ == "__main__":
-    logging.basicConfig(filename="log/provider_setup.log", filemode="a", level=logging.INFO)
+	logging.basicConfig(filename="log/provider_setup.log", filemode="a", level=logging.INFO)
 
 	# Generate a user jwt for the provider
 	addr = sys.argv[1]
@@ -27,7 +27,7 @@ if __name__ == "__main__":
 	logging.info(f"Provider user generated. \n\tjwt: {jwt}\n\t user id: {user_id}")
 
 	# Load the database to the server
-	f = open("../example/broker_a/db.json")
+	f = open("./example/broker_a/db.json")
 	provider_config = json.loads(f.read())
 	f.close()
 	for table_name, table_config in provider_config.items():

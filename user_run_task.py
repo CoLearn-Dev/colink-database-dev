@@ -4,7 +4,7 @@ import colink as CL
 from colink import CoLink, decode_jwt_without_validation
 
 if __name__ == "__main__":
-    logging.basicConfig(filename="log/user_run_task.log", filemode="a", level=logging.INFO)
+    logging.basicConfig(filename="user_run_task.log", filemode="a", level=logging.INFO)
     addr = sys.argv[1]
     jwt_c = sys.argv[2]
     jwt_p = sys.argv[3]

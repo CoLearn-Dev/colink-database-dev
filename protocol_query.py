@@ -17,7 +17,7 @@ def run_client(cl: CoLink, param: bytes, participants: List[CL.Participant]):
     def merge_results(results, query): # Note that both the input and the output results are strings
         if not results:
             return ""
-        if query.is_aggregate() == '':
+        if query.is_aggregate():
             total = 0
             for result in results:
                 total += int(result)
