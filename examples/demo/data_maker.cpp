@@ -1,7 +1,3 @@
-//
-// Created by Songwen Zhao on 11/02/22.
-//
-
 #include <cstdio>
 #include <cassert>
 #include <cstring>
