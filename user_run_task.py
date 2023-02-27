@@ -1,5 +1,7 @@
 import sys
+import os
 import logging
+import json
 import colink as CL
 from colink import (
     CoLink,
@@ -10,15 +12,20 @@ from user_setup import initialize_provider, initialize_client
 
 if __name__ == "__main__":
     logging.basicConfig(filename="user_run_task.log", filemode="w", level=logging.INFO)
-    addr_c = sys.argv[1]
-    jwt_c = sys.argv[2]
-    addr_p = sys.argv[3]
-    jwt_p = sys.argv[4]
+    dir = sys.argv[1]
+    with open(os.path.join(dir, "config.json")) as f:
+        config = json.load(f)
+    
+    addr_c = sys.argv[2]
+    jwt_c = sys.argv[3]
+    addr_p = sys.argv[4]
+    jwt_p = sys.argv[5]
+    dir = sys.argv[5]
     cl_c = CoLink(addr_c, jwt_c)
     cl_p = CoLink(addr_p, jwt_p)
 
-    initialize_provider(cl_p)
-    query_path = initialize_client(cl_c)
+    initialize_provider(cl_p, os.path.join(dir, "broker_a"))
+    query_path = initialize_client(cl_c, os.path.join(dir, "client"))
 
     # Run task
     logging.info("Run task!")

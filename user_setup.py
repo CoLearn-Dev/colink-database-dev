@@ -1,4 +1,5 @@
 import sys
+import os
 import logging
 import json
 from colink import (
@@ -22,41 +23,41 @@ def user_generator(addr, jwt):
 	return user_jwt
 	
 
-def initialize_client(cl, config_path=None):
+def initialize_client(cl, dir):
     logging.info("Client server setup!")
 
     # load configuration to the client server
-    with open("./example/client/config.json") as f:
+    with open(os.path.join(dir, "config.json")) as f:
         config = json.load(f)
-    providers_config = config["providers"]
-    for provider_name, provider_config in providers_config.items():
+    providers = config["providers"]
+    for provider_name, provider_info in providers.items():
         key_name = ":".join(["config", provider_name, "type"])
-        cl.create_entry(key_name, provider_config["type"])
-        tables_name = provider_config["tables"]
+        cl.create_entry(key_name, provider_info["type"])
+        tables_name = provider_info["tables"]
         key_name = ":".join(["provider", provider_name, "tables"])
         cl.create_entry(key_name, json.dumps(tables_name))
     # load the query to the client server
-    with open("./example/client/query.sql") as f:
+    with open(os.path.join(dir, "query.sql")) as f:
         query_path = cl.create_entry("query", f.readline())
     return query_path
 
 
-def initialize_provider(cl, config_path=None):
+def initialize_provider(cl, dir):
     logging.info("Provider server setup!")
 
 	# load the database to the provider server
-    with open("./example/broker_a/db.json") as f:
-        provider_config = json.load(f)
-    for table_name, table_config in provider_config.items():
+    with open(os.path.join(dir, "db.json")) as f:
+        db = json.load(f)
+    for table_name, table in db.items():
         key_name = ":".join(["database", table_name, "schema"])
-        fields = table_config["schema"]["field"]
+        fields = table["schema"]["field"]
         names = json.dumps([n for n, t in fields])
         types = json.dumps([t for n, t in fields])
         cl.create_entry(":".join([key_name, "name"]), names)
         cl.create_entry(":".join([key_name, "type"]), types)
 
         key_name = ":".join(["database", table_name, "data"])
-        records = table_config["data"]
+        records = table["data"]
         for i, record in enumerate(records):
             cl.create_entry(":".join([key_name, str(i)]), json.dumps(record))
 
@@ -65,4 +66,4 @@ if __name__ == "__main__":
 	addr = sys.argv[1]
 	jwt = sys.argv[2]
 	user_jwt = user_generator(addr, jwt)
-	print(f"# User imported \n\taddr: {addr}\n\tjwt: {user_jwt}\n\t")
+	print(f"# User generated \n\taddr: {addr}\n\tjwt: {user_jwt}\n\t")
