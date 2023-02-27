@@ -1,1 +1,1 @@
-SELECT SUM(deposit) FROM t_deposit WHERE user_name = "Robert"
+SELECT id, deposit FROM t_deposit WHERE user_name = "Robert"
