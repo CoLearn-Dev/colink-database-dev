@@ -1,35 +1,30 @@
-# Colink Database Demo
+# Colink Database Dev
 
-A distributed database system demo on multiple sources built with CoLink.
+A distributed database system on multiple sources built with CoLink. 
 
-## Description
-
-+ Schema: ID | User Name | Deposit
-+ Supported Query: RETRIEVE, SUM
+Examples include a demo database on multiple data providers and a JPMC mock database for transaction record retrieval and aggregation. See `examples/demo/` and `examples/jpmc_case/`.
 
 ## Requirements
 
 + Python 3.9
-+ CoLink 0.2.3
++ CoLink 0.2.4
 
 ## Usage
 
-+ Prepare your query under `/example/client/query.sql`.
-
-```sql
-# examples
-SELECT SUM(deposit) FROM t_deposit WHERE id < 18
-SELECT id, deposit FROM t_deposit WHERE user_name = "Niki"
-```
-For instant server simulation, directly run `protocol_query_with_instant_server.py`. Otherwise follow the steps below.
-
-+ If needed, run `user_jwt_generator.py` to generate and import users for the client and the data providers. 
+Default query examples are prepared your under `examples/.../client/query.sql`. If needed, directly run `user_setup.py` to gernerate user JWTs for new users. 
 
 ```shell
-python user_jwt_generator.py <addr> <jwt>
+python user_setup.py <addr> <jwt>
 ```
 
-+ Create two new terminals and start protocol operator for the client and the data provider separately.
+### Run with Instant Server
+```shell
+python run_with_instant_server.py <example dir>
+```
+
+### Run on Real Server
+
++ Create new terminals and start protocol operator for the client and the data providers separately.
 
 ```shell
 python protocol_query.py \
@@ -41,9 +36,10 @@ python protocol_query.py \
 
 ```shell
 python user_run_task.py \
+  <example dir> \
   <client server addr> \
   <client user jwt> \
   <provider server addr> \
-  <provider user jwt>
+  <provider user jwt> \
+  ...
 ```
-
