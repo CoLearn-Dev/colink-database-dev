@@ -1,5 +1,6 @@
 import logging
 from typing import List
+from collections import Counter
 import json
 from sql_parser import Query
 import colink as CL
@@ -15,16 +16,21 @@ pop = ProtocolOperator(__name__)
 @pop.handle("query:client")
 def run_client(cl: CoLink, param: bytes, participants: List[CL.Participant]):
     def merge_results(results, query): # Note that both the input and the output results are strings
-        if query.is_aggregate():
-            total = 0
-            for result in results:
-                total += int(result)
-            return str(total)
         if query.is_retrieve():
             merged_results = []
             for result in results:
                 merged_results += json.loads(result)
             return json.dumps(merged_results)
+        elif query.is_aggregate_bool():
+            total = False
+            for result in results:
+                total |= json.loads(result)
+            return json.dumps(total)
+        elif query.is_aggregate():
+            total = 0
+            for result in results:
+                total += json.loads(result)
+            return json.dumps(total)
 
     logging.info(f"query:client protocol operator! {cl.jwt}")
 
@@ -54,14 +60,32 @@ def run_provider(cl: CoLink, param: bytes, participants: List[CL.Participant]):
                     record[schema_name[i]] = value
                 if query.pred.check(record):
                     result.append([record[col] for col in query.concerned_column])
-        elif query.type == "Q_AGGREGATE_SUM":
-            result = 0
+        elif query.type in ["Q_AGGREGATE_EXIST", "Q_AGGREGATE_CNT", "Q_AGGREGATE_SUM", "Q_AGGREGATE_AVG"]:
+            sum, cnt = 0, 0
+            for row in table:
+                record = {"*": 0}
+                for i, value in enumerate(row):
+                    record[schema_name[i]] = value
+                if query.pred.check(record):
+                    sum += record[query.concerned_column]
+                    cnt += 1
+            if query.type == "Q_AGGREGATE_EXIST":
+                result = cnt > 0
+            elif query.type == "Q_AGGREGATE_CNT":
+                result = cnt
+            elif query.type == "Q_AGGREGATE_SUM":
+                result = sum
+            elif query.type == "Q_AGGREGATE_AVG":
+                result = int(sum/cnt)
+        elif query.type == "Q_AGGREGATE_CNT_UNQ":
+            result_list = []
             for row in table:
                 record = {}
                 for i, value in enumerate(row):
                     record[schema_name[i]] = value
                 if query.pred.check(record):
-                    result += record[query.concerned_column]
+                    result_list.append(record[query.concerned_column])
+            result = len(Counter(result_list).keys())
         return json.dumps(result)
 
     logging.info(f"query:client protocol operator! {cl.jwt}")

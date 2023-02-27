@@ -70,7 +70,17 @@ class Query:
                 from_r, where_l = i, i+1
         tokens_select = tokens[select_l:select_r]
         if ~''.join(tokens_select).find('('):
-            self.type = "Q_AGGREGATE_SUM"
+            aggregate_type = tokens_select[0].split('(')[0]
+            if aggregate_type == "EXIST":
+                self.type = "Q_AGGREGATE_EXIST"
+            elif aggregate_type == "COUNT":
+                self.type = "Q_AGGREGATE_CNT"
+            elif aggregate_type == "SUM":
+                self.type = "Q_AGGREGATE_SUM"
+            elif aggregate_type == "AVG":
+                self.type = "Q_AGGREGATE_AVG"
+            elif aggregate_type == "COUNT_UNIQUE":
+                self.type = "Q_AGGREGATE_CNT_UNQ"
             self.concerned_column = tokens_select[0].split('(')[1].replace(')', '')
         else:
             self.type = "Q_RETRIEVE"
@@ -85,6 +95,9 @@ class Query:
 
     def is_aggregate(self):
         return self.type.find("Q_AGGREGATE") != -1
+    
+    def is_aggregate_bool(self):
+        return self.type == "Q_AGGREGATE_EXIST"
 
     def dumps(self):
         dic = {
