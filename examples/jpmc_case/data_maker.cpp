@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 		else record += ", "+outInt(-P)+", "+outInt(0);
 		if (V>0) record += ", "+outBool(false);
 		else record += ", "+outBool(true);
-		record += ", "+outInt(time(NULL));
+		record += ", "+outInt(time(NULL)-r()%10000);
 		record += "]";
 		if (i<n-1) data += "\t\t\t"+record+",\n";
 		else data += "\t\t\t"+record+"\n";
