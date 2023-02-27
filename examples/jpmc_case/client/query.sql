@@ -1,1 +1,1 @@
-SELECT SUM(volume) FROM t_transaction WHERE is_buy = true
+SELECT SUM(price_for_buy) FROM t_transaction WHERE is_buy = TRUE

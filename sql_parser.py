@@ -6,7 +6,16 @@ class Predicate:
         if tokens == None:
             return
         self.concerned_column = tokens[0]
-        self.value = tokens[2].replace('\"', '')
+        self.value = tokens[2]
+        if self.value[0] != '\"':
+            if self.value == "TRUE":
+                self.value = True
+            elif self.value == "FALSE":
+                self.value == False
+            else:
+                self.value = int(self.value)
+        else:
+            self.value = self.value.replace('\"', '') 
         self.type = tokens[1]
 
     def check(self, record):
@@ -39,7 +48,18 @@ class Query:
         if sql == None:
             return
         # Parse SQL query, supported query types SUM, RETRIEVE
-        tokens = sql.replace('\n', ' ').strip().split(' ')
+        sql = sql.replace('\n', ' ').strip()
+        tokens, i, pre = [], 0, 0
+        while i < len(sql):
+            if sql[i] == '\"':
+                i += 1
+                while sql[i] != '\"':
+                    i += 1
+            elif sql[i] == ' ':
+                tokens.append(sql[pre:i])
+                pre = i+1
+            i += 1
+        tokens.append(sql[pre:])
         tokens = [token for token in tokens if token != '']
         for i, token in enumerate(tokens):
             if token == "SELECT":
