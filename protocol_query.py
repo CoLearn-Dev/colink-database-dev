@@ -34,7 +34,7 @@ def run_client(cl: CoLink, param: bytes, participants: List[CL.Participant]):
     cl.set_variable("query", bytes(query.dumps(), 'utf-8'), participants[1:])
     
     # Receive query results
-    result = []
+    results = []
     for participant in participants[1:]:
         result = byte_to_str(cl.get_variable("result", participant))
         if result != "Table not found.":
