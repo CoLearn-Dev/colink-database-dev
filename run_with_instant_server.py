@@ -29,10 +29,8 @@ if __name__ == "__main__":
         pop.run_attach(cl_ps[i])
     
     for i in range(config["n_providers"]):
-        user_dir = os.path.join(dir, config["dirctories"]["providers"][i])
-        initialize_provider(cl_ps[i], user_dir)
-    user_dir = os.path.join(dir, config["dirctories"]["client"])
-    query_path = initialize_client(cl_c, user_dir)
+        initialize_provider(cl_ps[i], os.path.join(dir, config["dirctories"]["providers"][i]))
+    query_path = initialize_client(cl_c, os.path.join(dir, config["dirctories"]["client"]))
 
     # Run task
     logging.info("Run task!")

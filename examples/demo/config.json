@@ -1,9 +1,11 @@
 {
-    "n_providers": 1,
+    "n_providers": 3,
     "dirctories": {
         "client": "client",
         "providers": [
-            "broker_a"
+            "broker_a",
+            "broker_b",
+            "broker_c"
         ]
     }
 }
