@@ -4,7 +4,7 @@
             "field": [
                 ["id", "int"],
                 ["user_name", "str"],
-                ["deposit", "float"]
+                ["deposit", "int"]
             ],
             "key": {
                 "id": "primary"

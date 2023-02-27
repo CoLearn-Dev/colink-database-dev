@@ -1,0 +1,90 @@
+{
+    "t_deposit": {
+        "schema": {
+            "field": [
+                ["id", "int"],
+                ["user_name", "str"],
+                ["deposit", "int"]
+            ],
+            "key": {
+                "id": "primary"
+            }
+        },
+        "data": [
+			[0, "Jennifer", 760],
+			[1, "Michael", 321],
+			[2, "David", 9072],
+			[3, "James", 3395],
+			[4, "Michael", 1623],
+			[5, "Robert", 5811],
+			[6, "Michael", 3885],
+			[7, "Niki", 3399],
+			[8, "Linda", 168],
+			[9, "Jennifer", 2739],
+			[10, "Linda", 3526],
+			[11, "Robert", 1756],
+			[12, "Michael", 8527],
+			[13, "Michael", 1071],
+			[14, "James", 8878],
+			[15, "James", 8458],
+			[16, "David", 6144],
+			[17, "Niki", 7000],
+			[18, "Michael", 3695],
+			[19, "James", 1045],
+			[20, "Michael", 2851],
+			[21, "David", 8212],
+			[22, "David", 5409],
+			[23, "Jennifer", 1104],
+			[24, "Robert", 6143],
+			[25, "James", 3824],
+			[26, "Michael", 6314],
+			[27, "Robert", 4960],
+			[28, "James", 3107],
+			[29, "Robert", 5528]
+        ]
+    },
+	"t_payment": {
+        "schema": {
+            "field": [
+                ["id", "int"],
+                ["user_name", "str"],
+                ["amount", "int"]
+            ],
+            "key": {
+                "id": "primary"
+            }
+        },
+        "data": [
+			[0, "David", 80],
+			[1, "David", 585],
+			[2, "Jennifer", 559],
+			[3, "Robert", 397],
+			[4, "James", 587],
+			[5, "Michael", 182],
+			[6, "James", 892],
+			[7, "David", 899],
+			[8, "Robert", 932],
+			[9, "Michael", 795],
+			[10, "Taylor", 97],
+			[11, "David", 368],
+			[12, "Jennifer", 414],
+			[13, "Jennifer", 653],
+			[14, "James", 662],
+			[15, "James", 939],
+			[16, "David", 648],
+			[17, "David", 963],
+			[18, "Robert", 631],
+			[19, "Michael", 71],
+			[20, "David", 343],
+			[21, "Linda", 400],
+			[22, "Linda", 431],
+			[23, "Robert", 637],
+			[24, "Linda", 659],
+			[25, "Michael", 272],
+			[26, "Robert", 889],
+			[27, "James", 853],
+			[28, "James", 70],
+			[29, "Jennifer", 165]
+        ]
+    }
+}

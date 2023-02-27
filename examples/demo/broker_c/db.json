@@ -1,0 +1,46 @@
+{
+    "t_payment": {
+        "schema": {
+            "field": [
+                ["id", "int"],
+                ["user_name", "str"],
+                ["amount", "int"]
+            ],
+            "key": {
+                "id": "primary"
+            }
+        },
+        "data": [
+			[0, "David", 80],
+			[1, "David", 585],
+			[2, "Jennifer", 559],
+			[3, "Robert", 397],
+			[4, "James", 587],
+			[5, "Michael", 182],
+			[6, "James", 892],
+			[7, "David", 899],
+			[8, "Robert", 932],
+			[9, "Michael", 795],
+			[10, "Michael", 97],
+			[11, "David", 368],
+			[12, "Jennifer", 414],
+			[13, "Jennifer", 653],
+			[14, "James", 662],
+			[15, "James", 939],
+			[16, "David", 648],
+			[17, "David", 963],
+			[18, "Robert", 631],
+			[19, "Michael", 71],
+			[20, "David", 343],
+			[21, "Linda", 400],
+			[22, "Linda", 431],
+			[23, "Robert", 637],
+			[24, "Linda", 659],
+			[25, "Michael", 272],
+			[26, "Robert", 889],
+			[27, "James", 853],
+			[28, "James", 70],
+			[29, "Jennifer", 165]
+        ]
+    }
+}
