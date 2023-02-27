@@ -22,8 +22,8 @@ if __name__ == "__main__":
         cl_ps.append(CoLink(sys.argv[i*2+4], sys.argv[i*2+5]))
     
     for i in range(config["n_providers"]):
-        initialize_provider(cl_ps[i], os.path.join(dir, config["dirctories"]["providers"][i]))
-    query_path = initialize_client(cl_c, os.path.join(dir, config["dirctories"]["client"]))
+        initialize_provider(cl_ps[i], os.path.join(dir, config["user_dir"]["providers"][i]))
+    query_path = initialize_client(cl_c, os.path.join(dir, config["user_dir"]["client"]))
 
     # Run task
     logging.info("Run task!")

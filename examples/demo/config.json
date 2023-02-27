@@ -1,6 +1,6 @@
 {
     "n_providers": 3,
-    "dirctories": {
+    "user_dir": {
         "client": "client",
         "providers": [
             "broker_a",
