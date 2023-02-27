@@ -1,7 +1,7 @@
 import logging
 from typing import List
 import json
-from sql_processing import Query
+from sql_parser import Query
 import colink as CL
 from colink import (
     CoLink, 
