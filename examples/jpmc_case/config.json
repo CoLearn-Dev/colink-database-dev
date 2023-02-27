@@ -1,0 +1,9 @@
+{
+    "n_providers": 1,
+    "dirctories": {
+        "client": "client",
+        "providers": [
+            "broker_a"
+        ]
+    }
+}
