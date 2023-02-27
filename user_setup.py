@@ -11,16 +11,16 @@ from colink import (
 
 
 def user_generator(addr, jwt):
-	# Import a new user to the colink server
-	cl = CoLink(addr, jwt)
-	pk, sk = generate_user()
-	core_pub_key = cl.request_info().core_public_key
-	expiration_timestamp = get_time_stamp() + 86400 * 31
-	signature_timestamp, sig = prepare_import_user_signature(
-	    pk, sk, core_pub_key, expiration_timestamp
-	)
-	user_jwt = cl.import_user(pk, signature_timestamp, expiration_timestamp, sig)
-	return user_jwt
+    # Import a new user to the colink server
+    cl = CoLink(addr, jwt)
+    pk, sk = generate_user()
+    core_pub_key = cl.request_info().core_public_key
+    expiration_timestamp = get_time_stamp() + 86400 * 31
+    signature_timestamp, sig = prepare_import_user_signature(
+        pk, sk, core_pub_key, expiration_timestamp
+    )
+    user_jwt = cl.import_user(pk, signature_timestamp, expiration_timestamp, sig)
+    return user_jwt
 	
 
 def initialize_client(cl, dir):
@@ -45,7 +45,7 @@ def initialize_client(cl, dir):
 def initialize_provider(cl, dir):
     logging.info("Provider server setup!")
 
-	# load the database to the provider server
+    # load the database to the provider server
     with open(os.path.join(dir, "db.json")) as f:
         db = json.load(f)
     for table_name, table in db.items():
@@ -63,7 +63,7 @@ def initialize_provider(cl, dir):
 
 
 if __name__ == "__main__":
-	addr = sys.argv[1]
-	jwt = sys.argv[2]
-	user_jwt = user_generator(addr, jwt)
-	print(f"# User generated \n\taddr: {addr}\n\tjwt: {user_jwt}\n\t")
+    addr = sys.argv[1]
+    jwt = sys.argv[2]
+    user_jwt = user_generator(addr, jwt)
+    print(f"# User generated \n\taddr: {addr}\n\tjwt: {user_jwt}\n\t")
