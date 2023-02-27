@@ -1,0 +1,1 @@
+SELECT SUM(volume) FROM t_transaction WHERE is_buy = true
