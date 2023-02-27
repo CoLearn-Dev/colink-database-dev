@@ -11,7 +11,7 @@ Examples include a demo database on multiple data providers and a JPMC mock data
 
 ## Usage
 
-Default query examples are prepared your under `examples/.../client/query.sql`. If needed, directly run `user_setup.py` to gernerate user JWTs for new users. 
+Default query examples are prepared under `examples/.../client/query.sql`. If needed, directly run `user_setup.py` to gernerate user JWTs for new users. 
 
 ```shell
 python user_setup.py <addr> <jwt>
